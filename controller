@@ -1,0 +1,80 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class taskcontroller extends CI_Controller {
+	public function __construct()
+	{
+		parent::__construct();
+		//$this->load->helper('form');
+		//$this->load->library('session');
+		$this->load->database();
+		//$this->load->model('');
+
+	}
+	public function index()
+	{
+		$this->load->view('index');
+	}
+	public function display_records()
+	{
+		$query['data']=$this->db->query("select * from user")->result();
+
+		$this->load->view('display_records',$query);
+	}
+	public function insert()
+	{
+		$data = array(
+        	'name' => $this->input->post('name'),
+        	'dob' => $this->input->post('dob'),
+        	'des' => $this->input->post('des'),
+        	'qua' => $this->input->post('qua'),
+        	'gender' => $this->input->post('gender'),
+        	'email' => $this->input->post('email'),
+        	'loc' => $this->input->post('loc'),
+        	'mo' => $this->input->post('mo'),
+        	);
+
+		$result=$this->db->insert('user',$data);
+		print_r($result);
+		redirect('taskcontroller/display_records');
+	
+	}
+	public function update()
+	{
+		$uid = $this->input->post('uid');
+		$data = array(
+        	'name' => $this->input->post('name'),
+        	'dob' => $this->input->post('dob'),
+        	'des' => $this->input->post('des'),
+        	'qua' => $this->input->post('qua'),
+        	'gender' => $this->input->post('gender'),
+        	'email' => $this->input->post('email'),
+        	'loc' => $this->input->post('loc'),
+        	'mo' => $this->input->post('mo')
+        	);
+			$this->db->where('id',$uid);
+			$this->db->update('user',$data);
+			
+			redirect('taskcontroller/display_records');
+	
+	}
+	
+	public function delete()
+	{
+		$id = $this->input->get('id');
+		$this->db->where('id', $id);
+		$this->db->delete('user', array('id' => $id));
+		redirect('taskcontroller/display_records');
+	
+	}
+	
+	public function fetch()
+	{
+		$id=$this->input->get('id');
+		$query['data']=$this->db->query("select * from user where id='".$id."'")->result();
+		$this->load->view('update',$query);
+	
+	}
+	
+
+}
